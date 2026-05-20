@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}"></head>
+
+<body class="bg-dark text-white">
+
+    <header th:insert="~{fragments/navbar :: navbar('pizze')}"></header>
+
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card text-white bg-dark border-0 shadow-lg rounded-4">
+                    <div class="card-body p-4">
+
+                        <h2 class="fw-bold text-center mb-4">🍕 Dettaglio Pizza</h2>
+
+                        <div class="mb-3">
+                            <!-- th:text - inserisce il valore dell'attributo nell'elemento -->
+                            <span class="badge bg-danger fs-6">
+                                ID: <span th:text="${pizza.id}"></span>
+                            </span>
+                        </div>
+
+                        <hr class="border-secondary">
+
+                        <p class="fs-5">
+                            🍕 <strong>Nome:</strong>
+                            <span th:text="${pizza.nome}"></span>
+                        </p>
+
+                        <p class="fs-5">
+                            📝 <strong>Descrizione:</strong>
+                            <span th:text="${pizza.descrizione}"></span>
+                        </p>
+
+                        <p class="fs-5">
+                            💶 <strong>Prezzo:</strong>
+                            <span th:text="${pizza.prezzo} + ' €'"></span>
+                        </p>
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <a th:href="@{/pizze}" class="btn btn-outline-light rounded-pill px-4">
+                                ← Torna alla lista
+                            </a>
+                           
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/fragments :: footer}"></footer>
+    <th:block th:replace="~{fragments/fragments :: scripts}"></th:block>
+</body>
+</html>

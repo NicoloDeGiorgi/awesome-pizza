@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}"></head>
+
+<body class="bg-dark text-white">
+
+    <header th:insert="~{fragments/navbar :: navbar('ordini')}"></header>
+
+    <main class="container py-5">
+        <div class="card bg-dark border-0 shadow-lg rounded-4">
+            <div class="card-body p-4">
+
+                <!-- th:if - mostra la tabella solo se ci sono ordini -->
+                <th:block th:if="${ordini != null and ordini.size() > 0}">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold text-uppercase m-0">📋 Lista Ordini</h2>
+                        <a th:href="@{/ordini/create}" class="btn btn-primary rounded-pill px-4">
+                            ➕ Nuovo Ordine
+                        </a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0">
+                            <thead class="border-bottom border-secondary">
+                                <tr class="text-uppercase small text-muted">
+                                    <th>#</th>
+                                    <th>Codice</th>
+                                    <th>Data</th>
+                                    <th>Stato</th>
+                                    <th class="text-end">Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- th:each - ciclo su ogni ordine della lista -->
+                                <tr th:each="ordine : ${ordini}">
+                                    <td><span class="badge bg-secondary" th:text="${ordine.id}"></span></td>
+                                    <td class="fw-semibold" th:text="${ordine.codice}"></td>
+                                    <td th:text="${ordine.dataOrdine}"></td>
+                                    <td>
+                                        <!-- th:class - cambia colore badge in base allo stato dell'ordine -->
+                                        <span th:text="${ordine.stato}"
+                                            th:class="${ordine.stato.name() == 'IN_ATTESA'} ? 'badge bg-warning text-dark' : (${ordine.stato.name() == 'IN_LAVORAZIONE'} ? 'badge bg-primary' : 'badge bg-success')">
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group">
+
+                                            <a th:href="@{/ordini/{id}(id=${ordine.id})}"
+                                                class="btn btn-outline-primary btn-sm">📂</a>
+
+                                            <!-- th:if - visibile solo se l'ordine è IN_ATTESA -->
+                                            <form th:action="@{/ordini/prendiincarico/{id}(id=${ordine.id})}" method="post"
+                                                th:if="${ordine.stato == T(com.degiorgi.awesomepizza.model.StatoOrdine).IN_ATTESA}">
+                                                <button type="submit" class="btn btn-outline-warning btn-sm">▶️ Prendi in carico</button>
+                                            </form>
+
+                                            <!-- th:if - visibile solo se l'ordine è IN_LAVORAZIONE -->
+                                            <form th:action="@{/ordini/completa/{id}(id=${ordine.id})}" method="post"
+                                                th:if="${ordine.stato == T(com.degiorgi.awesomepizza.model.StatoOrdine).IN_LAVORAZIONE}">
+                                                <button type="submit" class="btn btn-outline-success btn-sm">✅ Completa</button>
+                                            </form>
+
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                data-bs-toggle="modal"
+                                                th:attr="data-bs-target='#delete-modal-' + ${ordine.id}">
+                                                🗑️
+                                            </button>
+
+                                        </div>
+
+                                        <!-- Modal conferma eliminazione -->
+                                        <div class="modal fade" th:id="'delete-modal-' + ${ordine.id}"
+                                            data-bs-backdrop="static" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-black">Conferma eliminazione</h5>
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body text-danger text-center">
+                                                        Sei sicuro di voler eliminare l'ordine
+                                                        <strong th:text="${ordine.codice}"></strong>?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Annulla</button>
+                                                        <form th:action="@{/ordini/delete/{id}(id=${ordine.id})}"
+                                                            method="post">
+                                                            <button type="submit" class="btn btn-danger">Elimina</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </th:block>
+
+                <!-- th:unless - mostrato solo se la lista è vuota -->
+                <th:block th:unless="${ordini != null and ordini.size() > 0}">
+                    <div class="text-center text-white py-5">
+                        <h4>Nessun ordine disponibile</h4>
+                    </div>
+                </th:block>
+
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/fragments :: footer}"></footer>
+    <th:block th:replace="~{fragments/fragments :: scripts}"></th:block>
+</body>
+</html>

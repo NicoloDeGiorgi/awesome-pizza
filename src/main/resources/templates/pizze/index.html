@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}"></head>
+
+<body class="bg-dark text-white">
+
+    <header th:insert="~{fragments/navbar :: navbar('pizze')}"></header>
+
+    <main class="container py-5">
+        <div class="card bg-dark border-0 shadow-lg rounded-4">
+            <div class="card-body p-4">
+
+                <!-- th:if - mostra la tabella solo se ci sono pizze -->
+                <th:block th:if="${pizze != null and pizze.size() > 0}">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold text-uppercase m-0">Lista Pizze</h2>
+                        <a th:href="@{/pizze/create}" class="btn btn-primary rounded-pill px-4">
+                            ➕ Aggiungi Pizza
+                        </a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle mb-0">
+                            <thead class="border-bottom border-secondary">
+                                <tr class="text-uppercase small text-muted">
+                                    <th>#</th>
+                                    <th>Nome</th>
+                                    <th>Descrizione</th>
+                                    <th>Prezzo</th>
+                                    <th class="text-end">Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- th:each - ciclo su ogni pizza della lista -->
+                                <tr th:each="pizza : ${pizze}">
+                                    <td><span class="badge bg-secondary" th:text="${pizza.id}"></span></td>
+                                    <td class="fw-semibold" th:text="${pizza.nome}"></td>
+                                    <td th:text="${pizza.descrizione}"></td>
+                                    <td th:text="${pizza.prezzo} + ' €'"></td>
+                                    <td class="text-end">
+                                        <div class="btn-group">
+                                            <!-- th:href - genera URL dinamico con l'id della pizza -->
+                                            <a th:href="@{/pizze/{id}(id=${pizza.id})}"
+                                                class="btn btn-outline-primary btn-sm">📂</a>
+                                            <a th:href="@{/pizze/edit/{id}(id=${pizza.id})}"
+                                                class="btn btn-outline-success btn-sm">✏️</a>
+                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                data-bs-toggle="modal"
+                                                th:attr="data-bs-target='#delete-modal-' + ${pizza.id}">
+                                                🗑️
+                                            </button>
+                                        </div>
+
+                                        <!-- Modal conferma eliminazione -->
+                                        <div class="modal fade" th:id="'delete-modal-' + ${pizza.id}"
+                                            data-bs-backdrop="static" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-black">Conferma eliminazione</h5>
+                                                        <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body text-danger text-center">
+                                                        Sei sicuro di voler eliminare
+                                                        <strong th:text="${pizza.nome}"></strong>?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Annulla</button>
+                                                        <form th:action="@{/pizze/delete/{id}(id=${pizza.id})}"
+                                                            method="post">
+                                                            <button type="submit" class="btn btn-danger">Elimina</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </th:block>
+
+                <!-- th:unless - mostrato solo se la lista è vuota -->
+                <th:block th:unless="${pizze != null and pizze.size() > 0}">
+                    <div class="text-center text-white py-5">
+                        <h4>Nessuna pizza disponibile</h4>
+                    </div>
+                </th:block>
+
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/fragments :: footer}"></footer>
+    <th:block th:replace="~{fragments/fragments :: scripts}"></th:block>
+</body>
+</html>

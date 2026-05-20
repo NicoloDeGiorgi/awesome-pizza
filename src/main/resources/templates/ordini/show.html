@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{fragments/fragments :: head}"></head>
+
+<body class="bg-dark text-white">
+
+    <header th:insert="~{fragments/navbar :: navbar('ordini')}"></header>
+
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card text-white bg-dark border-0 shadow-lg rounded-4">
+                    <div class="card-body p-4">
+
+                        <h2 class="fw-bold text-center mb-4">📋 Dettaglio Ordine</h2>
+
+                        <div class="mb-3">
+                            <!-- th:text - inserisce il valore dell'attributo nell'elemento -->
+                            <span class="badge bg-danger fs-6">
+                                ID: <span th:text="${ordine.id}"></span>
+                            </span>
+                        </div>
+
+                        <hr class="border-secondary">
+
+                        <p class="fs-5">
+                            🔑 <strong>Codice:</strong>
+                            <span th:text="${ordine.codice}"></span>
+                        </p>
+
+                        <p class="fs-5">
+                            📅 <strong>Data:</strong>
+                            <span th:text="${ordine.dataOrdine}"></span>
+                        </p>
+
+                        <p class="fs-5">
+                            📊 <strong>Stato:</strong>
+                            <!-- th:class - cambia colore badge in base allo stato dell'ordine -->
+                            <span th:text="${ordine.stato}"
+                                th:class="${ordine.stato.name() == 'IN_ATTESA'} ? 'badge bg-warning text-dark' : (${ordine.stato.name() == 'IN_LAVORAZIONE'} ? 'badge bg-primary' : 'badge bg-success')">
+                            </span>
+                        </p>
+
+                        <p class="fs-5">
+                            🍕 <strong>Pizze:</strong>
+                            <!-- th:each - ciclo sulle pizze dell'ordine -->
+                            <!-- iter.last - evita la virgola dopo l'ultimo elemento -->
+                            <span th:each="pizza, iter : ${ordine.pizze}">
+                                <span th:text="${pizza.nome}"></span>
+                                <span th:if="${!iter.last}">, </span>
+                            </span>
+                        </p>
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <a th:href="@{/ordini}" class="btn btn-outline-light rounded-pill px-4">
+                                ← Torna alla lista
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/fragments :: footer}"></footer>
+    <th:block th:replace="~{fragments/fragments :: scripts}"></th:block>
+</body>
+</html>

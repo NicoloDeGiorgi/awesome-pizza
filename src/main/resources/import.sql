@@ -1,0 +1,2 @@
+INSERT INTO pizze (nome, descrizione, prezzo) VALUES ('Margherita', 'Pomodoro e mozzarella', 7.50),('Diavola', 'Pomodoro, mozzarella e salame piccante', 9.00),('Capricciosa', 'Pomodoro, mozzarella, prosciutto, funghi e olive', 10.50),('Quattro Formaggi', 'Mozzarella, gorgonzola, fontina e parmigiano', 10.00),('Marinara', 'Pomodoro, aglio e origano', 6.50);
+INSERT INTO ordini (codice, stato, data_ordine) VALUES ('aaa-111', 'IN_ATTESA', '2026-05-19 10:00:00'),('bbb-222', 'IN_LAVORAZIONE', '2026-05-19 10:30:00'),('ccc-333', 'COMPLETATO', '2026-05-19 11:00:00');
